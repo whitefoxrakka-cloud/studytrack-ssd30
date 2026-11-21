@@ -43,6 +43,9 @@ melihat gambaran kebiasaan belajar sekelompok mahasiswa.
 | FR-06 | Kelola dataset | Tabel 90 responden, pencarian, filter prodi, hapus baris, impor CSV, ekspor CSV, reset |
 | FR-07 | Laporan | Rekap pekan, proyeksi regresi linear, ringkasan cluster, cetak/PDF, ekspor CSV/JSON |
 | FR-08 | Tema & PWA | Mode terang/gelap, dapat dipasang sebagai aplikasi (service worker) |
+| FR-09 | Onboarding & pengaturan | Tur 3 langkah saat pertama dibuka; atur nama, target harian, k bawaan, tema, hapus data |
+| FR-10 | Catatan Nora | Saran kontekstual: runtutan hari, tidur kurang, HP berlebih, atau posisi cluster |
+| FR-11 | Animasi & aksesibilitas | Angka berjalan, grafik tumbuh, transisi tab, konfeti target; otomatis tenang bila *prefers-reduced-motion* |
 
 **Non-fungsional utama:** antarmuka mobile-first (≤390 px tetap rapi), tanpa dependensi pihak ketiga,
 hasil clustering deterministik (bibit tetap), waktu analisis < 100 ms untuk 90 data, data pengguna
@@ -111,22 +114,43 @@ studytrack-ssd30/
 ├─ manifest.webmanifest        metadata PWA
 ├─ sw.js                       service worker (cache luring)
 ├─ assets/
-│  ├─ css/app.css              seluruh gaya, termasuk tema gelap & gaya cetak
-│  ├─ ikon.svg                 ikon aplikasi
+│  ├─ css/app.css              sistem desain: token, komponen, animasi, gaya cetak
+│  ├─ ikon.svg                 ikon aplikasi (sumber PNG)
+│  ├─ img/                     ilustrasi & gambar (lihat bagian 6)
 │  └─ js/
 │     ├─ dataset.js            data survei (dibangkitkan)
 │     ├─ kmeans.js             mesin Data Sains (murni, bisa diuji Node)
-│     ├─ grafik.js             pembuat grafik SVG (tanpa pustaka)
+│     ├─ grafik.js             pembuat grafik SVG + kelas animasinya
+│     ├─ animasi.js            layar muat, angka berjalan, riak, konfeti, lembar, toast
 │     └─ app.js                state, tampilan, dan interaksi
 ├─ data/survei.csv             dataset dalam bentuk CSV
 ├─ tools/buat-dataset.mjs      pembangkit dataset (deterministik)
+├─ tools/buat-gambar.py        pembangkit gambar OG (Pillow)
 ├─ tests/kmeans.test.mjs       uji unit mesin Data Sains
 └─ docs/METODE.md              penjelasan metode & rumus
 ```
 
 ---
 
-## 6. Menjalankan
+## 6. Aset gambar
+
+Semua gambar berada di `assets/img/` dan **sudah terisi** (dibuat sendiri, bukan stok). Ganti berkasnya
+dengan ilustrasi pesanan tanpa mengubah kode — selama nama dan rasio tetap.
+
+| Berkas | Ukuran | Dipakai di | Catatan penggantian |
+|--------|--------|-----------|---------------------|
+| `hero.svg` | 420×320 (rasio 4:3) | Kartu "Mulai dari sini" saat data kosong | PNG/SVG 840×640, latar transparan, tanpa teks |
+| `kosong.svg` | 320×220 | Daftar jurnal & dataset kosong | 640×440 transparan |
+| `metode.svg` | 640×200 | Lembar "Tentang aplikasi" | diagram alur, 1280×400 |
+| `og.png` | 1200×630 | Pratinjau tautan (WhatsApp, X, dll.) | jangan beri teks di tepi 60 px |
+| `ikon-192.png`, `ikon-512.png` | persegi | Ikon PWA / homescreen | sisakan margin aman 12% (maskable) |
+
+Palet yang dipakai aplikasi: `#6d4aff` (ungu), `#ff7ab8` (pink), `#4f8dfd` (biru), `#22c39a` (mint),
+`#f5a524` (kuning), `#ef5b7d` (merah). Ilustrasi sebaiknya memakai 2–3 warna dari daftar ini agar menyatu.
+
+---
+
+## 7. Menjalankan
 
 **Cara cepat:** buka `index.html` langsung di peramban (semua fitur jalan dari `file://`).
 
@@ -147,13 +171,14 @@ http://localhost:8000/?tema=gelap          # tema gelap
 
 ---
 
-## 7. Pengujian
+## 8. Pengujian
 
 ```bash
 node --test tests/kmeans.test.mjs
 ```
 
-Delapan uji unit, semuanya lulus:
+Delapan uji unit, semuanya lulus (ditambah pemeriksaan interaksi manual di peramban: simpan sesi,
+ubah jenis lewat segmen, ulangi sesi, simpan pengaturan, ganti k, urutkan tabel dataset):
 
 | Uji | Yang diperiksa |
 |-----|----------------|
@@ -177,7 +202,7 @@ silhouette 0,355 · SSE 162 · iterasi 5 · k=3
 
 ---
 
-## 8. Peta jalan menuju versi final
+## 9. Peta jalan menuju versi final
 
 Versi web ini sudah memuat seluruh alur bisnis dan komponen Data Sains. Untuk memenuhi ketentuan
 "basis data terhubung" pada tugas besar, langkah berikutnya:
@@ -196,7 +221,7 @@ langsung dibandingkan dengan hasil scikit-learn sebagai uji silang.
 
 ---
 
-## 9. Pembagian tugas (contoh, 4 anggota)
+## 10. Pembagian tugas (contoh, 4 anggota)
 
 | Anggota | Tanggung jawab | Diagram |
 |---------|----------------|---------|
@@ -210,7 +235,7 @@ Kontribusi ditelusuri lewat riwayat commit; setiap anggota memegang minimal satu
 
 ---
 
-## 10. Catatan
+## 11. Catatan
 
 - Aplikasi ini diturunkan dari **Target Ashira** (pelacak target pribadi) — struktur tab, sistem
   penyimpanan, dan gaya visualnya dipakai ulang, lalu diarahkan ke domain akademik dan dilengkapi

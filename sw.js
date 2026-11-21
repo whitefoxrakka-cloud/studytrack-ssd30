@@ -1,5 +1,5 @@
 /* Service worker StudyTrack — cache sederhana, versi dinaikkan tiap rilis. */
-const VERSI = "st-v1";
+const VERSI = "st-v2";
 const ASET = [
   "./",
   "index.html",
@@ -7,9 +7,15 @@ const ASET = [
   "assets/js/dataset.js",
   "assets/js/kmeans.js",
   "assets/js/grafik.js",
+  "assets/js/animasi.js",
   "assets/js/app.js",
   "manifest.webmanifest",
   "assets/ikon.svg",
+  "assets/img/hero.svg",
+  "assets/img/kosong.svg",
+  "assets/img/metode.svg",
+  "assets/img/ikon-192.png",
+  "assets/img/ikon-512.png",
 ];
 
 self.addEventListener("install", (e) => {

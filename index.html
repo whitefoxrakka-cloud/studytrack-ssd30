@@ -3,15 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#7c5cf5">
+<meta name="theme-color" content="#6d4aff">
 <meta name="description" content="StudyTrack — aplikasi analisis kebiasaan belajar mahasiswa dengan K-Means clustering. Catat sesi belajar, lihat polamu, dapatkan saran yang terukur.">
 <title>StudyTrack — Analisis Kebiasaan Belajar</title>
 <link rel="canonical" href="https://studytrack.ghothys.my.id/">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%237c5cf5'/%3E%3Cpath d='M9 9h6.5a3 3 0 0 1 3 3v11a2.6 2.6 0 0 0-2.6-2.6H9z' fill='%23fff'/%3E%3Cpath d='M23 9h-4.5a3 3 0 0 0-3 3v11a2.6 2.6 0 0 1 2.6-2.6H23z' fill='%23ffd6ea'/%3E%3C/svg%3E">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="StudyTrack — Analisis Kebiasaan Belajar Mahasiswa">
+<meta property="og:description" content="Catat sesi belajar, lihat pola kebiasaanmu lewat K-Means clustering, dapatkan saran yang terukur.">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="assets/ikon.svg">
+<link rel="apple-touch-icon" href="assets/img/ikon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
+
+<!-- layar muat -->
+<div id="muat" role="status" aria-live="polite" aria-label="Memuat aplikasi">
+  <div class="muat-kartu">
+    <div class="muat-logo" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M6 7h8.4a4 4 0 0 1 4 4v12a3.4 3.4 0 0 0-3.4-3.4H6z" fill="#ffffff"/>
+        <path d="M26 7h-3.4A4 4 0 0 0 18.6 11v12a3.4 3.4 0 0 1 3.4-3.4H26z" fill="#ffe1f0"/>
+        <circle cx="24" cy="5.6" r="2.4" fill="#f5a524"/>
+      </svg>
+    </div>
+    <div class="muat-label">StudyTrack</div>
+    <div class="muat-bar"><i></i></div>
+  </div>
+</div>
+
 <div class="app">
   <header class="topbar">
     <div class="brand">
@@ -19,7 +43,7 @@
         <svg viewBox="0 0 32 32" fill="none">
           <path d="M7 8h8.2a3.8 3.8 0 0 1 3.8 3.8V25a3.2 3.2 0 0 0-3.2-3.2H7z" fill="#ffffff"/>
           <path d="M25 8h-3.2A3.8 3.8 0 0 0 18 11.8V25a3.2 3.2 0 0 1 3.2-3.2H25z" fill="#ffe1f0"/>
-          <circle cx="23.5" cy="6.5" r="2.2" fill="#ffd166"/>
+          <circle cx="23.5" cy="6.5" r="2.2" fill="#f5a524"/>
         </svg>
       </div>
       <div>
@@ -27,7 +51,10 @@
         <p id="tanggal">—</p>
       </div>
     </div>
-    <button class="icon-tombol" data-act="tema" id="btnTema" title="Ganti tema" aria-label="Ganti tema">🌙</button>
+    <div class="topbar-aksi">
+      <button class="icon-tombol" data-act="tema" id="btnTema" title="Ganti tema" aria-label="Ganti tema">🌙</button>
+      <button class="icon-tombol" data-act="atur" title="Pengaturan" aria-label="Pengaturan">⚙️</button>
+    </div>
   </header>
   <main id="isi"></main>
 </div>
@@ -36,24 +63,28 @@
 
 <button id="nora" data-act="nora" title="Nora — asisten kecil" aria-label="Tanya Nora">
   <svg viewBox="0 0 120 120" aria-hidden="true">
-    <path d="M30 100V50a30 30 0 0 1 60 0v50q-7.5-9-15 0-7.5 9-15 0-7.5-9-15 0-7.5 9-15 0Z" fill="#ffffff" stroke="#7c5cf5" stroke-width="5" stroke-linejoin="round"/>
-    <circle cx="48" cy="54" r="6" fill="#2f2a45"/>
-    <circle cx="72" cy="54" r="6" fill="#2f2a45"/>
-    <circle cx="50" cy="51.5" r="1.9" fill="#ffffff"/>
-    <circle cx="74" cy="51.5" r="1.9" fill="#ffffff"/>
+    <path d="M30 100V50a30 30 0 0 1 60 0v50q-7.5-9-15 0-7.5 9-15 0-7.5-9-15 0-7.5 9-15 0Z" fill="#ffffff" stroke="#6d4aff" stroke-width="5" stroke-linejoin="round"/>
+    <g class="mata">
+      <circle cx="48" cy="54" r="6" fill="#241f3a"/>
+      <circle cx="72" cy="54" r="6" fill="#241f3a"/>
+      <circle cx="50" cy="51.5" r="1.9" fill="#ffffff"/>
+      <circle cx="74" cy="51.5" r="1.9" fill="#ffffff"/>
+    </g>
     <ellipse cx="34" cy="68" rx="6.5" ry="4.5" fill="#ffc2dc"/>
     <ellipse cx="86" cy="68" rx="6.5" ry="4.5" fill="#ffc2dc"/>
-    <path d="M55 68q5 6 10 0" fill="none" stroke="#2f2a45" stroke-width="3.2" stroke-linecap="round"/>
-    <path d="M60 20v-8" stroke="#7c5cf5" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="60" cy="9" r="4" fill="#ffd166"/>
+    <path d="M55 68q5 6 10 0" fill="none" stroke="#241f3a" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M60 20v-8" stroke="#6d4aff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="60" cy="9" r="4" fill="#f5a524"/>
   </svg>
 </button>
 <div id="noraGelembung" role="status" aria-live="polite"></div>
+<div id="tumpah" aria-hidden="true"></div>
 <div id="toastWadah" aria-live="polite"></div>
 
 <script src="assets/js/dataset.js"></script>
 <script src="assets/js/kmeans.js"></script>
 <script src="assets/js/grafik.js"></script>
+<script src="assets/js/animasi.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

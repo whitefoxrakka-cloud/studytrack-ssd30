@@ -1,12 +1,16 @@
 /* ============================================================
    grafik.js — pembuat grafik SVG tanpa pustaka luar
-   Semua fungsi mengembalikan string SVG (viewBox tetap, lebar 100%).
+   Setiap grafik membawa kelas animasi (lihat app.css):
+     .bt batang tumbuh · .bh batang horizontal · .gj garis digambar
+     .tk titik muncul    · .rd radar mengembang
    ============================================================ */
 (function (global) {
   "use strict";
 
   const W = 320;
-  const fmt = (v) => (Math.abs(v) >= 100 ? Math.round(v) : Math.round(v * 10) / 10);
+  const fmt = (v) => String(Math.abs(v) >= 100 ? Math.round(v) : Math.round(v * 10) / 10).replace(".", ",");
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+
   /* bulatkan batas atas sumbu ke angka enak dibaca */
   function maksRapi(v) {
     if (!isFinite(v) || v <= 0) return 1;
@@ -16,18 +20,19 @@
     return f * p;
   }
 
-  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-
-  function ring(persen, warna) {
+  /* Cincin progres */
+  function ring(persen, warna, opsi) {
+    opsi = opsi || {};
     const r = 40, c = 2 * Math.PI * r;
     const p = Math.min(100, Math.max(0, Number(persen) || 0));
-    const off = c * (1 - p / 100);
+    const ke = c * (1 - p / 100);
     return (
       '<svg viewBox="0 0 100 100" class="ring" role="img" aria-label="' + fmt(p) + ' persen">' +
       '<circle class="ring-bg" cx="50" cy="50" r="' + r + '"></circle>' +
       '<circle class="ring-fg" cx="50" cy="50" r="' + r + '" transform="rotate(-90 50 50)" ' +
-      'style="stroke-dasharray:' + c.toFixed(1) + ';stroke-dashoffset:' + off.toFixed(1) + ';stroke:' + warna + '"></circle>' +
-      '<text class="ring-angka" x="50" y="57" text-anchor="middle" style="fill:#fff">' + fmt(p) + '%</text>' +
+      'style="stroke-dasharray:' + c.toFixed(1) + ";--dari:" + c.toFixed(1) + ";--ke:" + ke.toFixed(1) + ";stroke:" + warna + '"></circle>' +
+      '<text class="ring-angka" x="50" y="57" text-anchor="middle" style="fill:' + (opsi.teks || "var(--text)") + '">' +
+      '<tspan data-naik="' + (Math.round(p * 10) / 10) + '" data-desim="0">0</tspan>%</text>' +
       "</svg>"
     );
   }
@@ -52,7 +57,7 @@
       const x = kiri + (lw / n) * i + (lw / n - lebar) / 2;
       const h = Math.max(2, (d.value / maks) * lh);
       const y = atas + lh - h;
-      s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + lebar.toFixed(1) + '" height="' + h.toFixed(1) +
+      s += '<rect class="bt" style="--i:' + i + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + lebar.toFixed(1) + '" height="' + h.toFixed(1) +
         '" rx="4" fill="' + (d.warna || warna) + '" opacity="' + (d.redup ? ".45" : ".95") + '"><title>' + esc(d.label + ": " + fmt(d.value)) + "</title></rect>";
       s += '<text class="label-sumbu" x="' + (x + lebar / 2).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(d.label) + "</text>";
     });
@@ -69,11 +74,14 @@
     const maks = maksRapi(Math.max(1, ...data.map((d) => d.value)));
     const n = Math.max(1, data.length - 1);
     const warna = opsi.warna || "var(--ungu)";
-    const titik = data.map((d, i) => ({
-      x: kiri + (lw * i) / n,
-      y: atas + lh - (d.value / maks) * lh,
-      d,
-    }));
+    const titik = data.map((d, i) => ({ x: kiri + (lw * i) / n, y: atas + lh - (d.value / maks) * lh, d }));
+
+    let panjang = 0;
+    for (let i = 1; i < titik.length; i++) {
+      panjang += Math.hypot(titik[i].x - titik[i - 1].x, titik[i].y - titik[i - 1].y);
+    }
+    panjang = Math.ceil(panjang) + 4;
+
     let s = '<svg viewBox="0 0 ' + W + " " + H + '" class="grafik" role="img" aria-label="' + esc(opsi.judul || "grafik garis") + '">';
     for (let i = 0; i <= 2; i++) {
       const y = atas + (lh * i) / 2;
@@ -81,11 +89,12 @@
       s += '<text class="label-sumbu" x="' + (kiri - 5) + '" y="' + (y + 3) + '" text-anchor="end">' + fmt(maks * (1 - i / 2)) + "</text>";
     }
     const jalur = titik.map((p, i) => (i ? "L" : "M") + p.x.toFixed(1) + " " + p.y.toFixed(1)).join(" ");
-    s += '<path d="' + jalur + " L" + titik[titik.length - 1].x.toFixed(1) + " " + (atas + lh) + " L" + titik[0].x.toFixed(1) + " " + (atas + lh) +
-      ' Z" fill="' + warna + '" opacity=".13"/>';
-    s += '<path d="' + jalur + '" fill="none" stroke="' + warna + '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
-    titik.forEach((p) => {
-      s += '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3.4" fill="var(--card)" stroke="' + warna + '" stroke-width="2.4"><title>' +
+    s += '<path class="ga" d="' + jalur + " L" + titik[titik.length - 1].x.toFixed(1) + " " + (atas + lh) + " L" + titik[0].x.toFixed(1) + " " + (atas + lh) +
+      ' Z" fill="' + warna + '"/>';
+    s += '<path class="gj" style="--panjang:' + panjang + ';stroke-dasharray:' + panjang + '" d="' + jalur + '" fill="none" stroke="' + warna +
+      '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+    titik.forEach((p, i) => {
+      s += '<circle class="tk" style="--i:' + (i + 2) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3.4" fill="var(--card)" stroke="' + warna + '" stroke-width="2.4"><title>' +
         esc(p.d.label + ": " + fmt(p.d.value)) + "</title></circle>";
       s += '<text class="label-sumbu" x="' + p.x.toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.d.label) + "</text>";
     });
@@ -93,7 +102,7 @@
     return s;
   }
 
-  /* Sebar (scatter) */
+  /* Sebar */
   function sebar(titik, opsi) {
     opsi = opsi || {};
     const H = opsi.tinggi || 240;
@@ -118,15 +127,15 @@
     s += '<line class="sumbu" x1="' + kiri + '" y1="' + atas + '" x2="' + kiri + '" y2="' + (atas + lh) + '"/>';
     s += '<text class="label-sumbu" x="' + (kiri + lw / 2) + '" y="' + (H - 4) + '" text-anchor="middle" style="fill:var(--text)">' + esc(opsi.xLabel || "") + "</text>";
     s += '<text class="label-sumbu" x="11" y="' + (atas + lh / 2) + '" text-anchor="middle" transform="rotate(-90 11 ' + (atas + lh / 2) + ')" style="fill:var(--text)">' + esc(opsi.yLabel || "") + "</text>";
-    titik.forEach((t) => {
-      s += '<circle cx="' + sx(t.x).toFixed(1) + '" cy="' + sy(t.y).toFixed(1) + '" r="' + (t.besar ? 7 : 4.2) + '" fill="' + t.warna +
+    titik.forEach((t, i) => {
+      s += '<circle class="tk" style="--i:' + i + '" cx="' + sx(t.x).toFixed(1) + '" cy="' + sy(t.y).toFixed(1) + '" r="' + (t.besar ? 7 : 4.2) + '" fill="' + t.warna +
         '" opacity="' + (t.besar ? "1" : ".82") + '" stroke="' + (t.besar ? "#fff" : "none") + '" stroke-width="2"><title>' + esc(t.nama || "") + "</title></circle>";
     });
     s += "</svg>";
     return s;
   }
 
-  /* Radar (profil 6 fitur) */
+  /* Radar */
   function radar(seri, label, opsi) {
     opsi = opsi || {};
     const H = 300, cx = 160, cy = 148, r = 96;
@@ -146,16 +155,17 @@
       const lp = pos(i, 1.24);
       s += '<text class="label-sumbu" x="' + lp[0].toFixed(1) + '" y="' + (lp[1] + 3).toFixed(1) + '" text-anchor="middle">' + esc(l) + "</text>";
     });
-    seri.forEach((sr) => {
+    seri.forEach((sr, k) => {
       const titikSeri = sr.nilai.map((v, i) => {
         const rasio = Math.min(1, Math.max(0, v / (maks[i] || 1)));
         return pos(i, rasio).map((x) => x.toFixed(1)).join(",");
       });
-      s += '<polygon points="' + titikSeri.join(" ") + '" fill="' + sr.warna + '" fill-opacity=".16" stroke="' + sr.warna + '" stroke-width="2.2" stroke-linejoin="round"/>';
+      s += '<polygon class="rd" style="animation-delay:' + (k * 120) + 'ms" points="' + titikSeri.join(" ") + '" fill="' + sr.warna +
+        '" fill-opacity=".16" stroke="' + sr.warna + '" stroke-width="2.2" stroke-linejoin="round"/>';
       sr.nilai.forEach((v, i) => {
         const rasio = Math.min(1, Math.max(0, v / (maks[i] || 1)));
         const p = pos(i, rasio);
-        s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.8" fill="' + sr.warna + '"/>';
+        s += '<circle class="tk" style="--i:' + (k * 6 + i) + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.8" fill="' + sr.warna + '"/>';
       });
     });
     s += "</svg>";
@@ -176,14 +186,14 @@
       const labelPendek = d.label.length > 16 ? d.label.slice(0, 15) + "…" : d.label;
       s += '<text class="label-sumbu" x="' + (kiri - 8) + '" y="' + (y + 12) + '" text-anchor="end" style="fill:var(--text)">' + esc(labelPendek) + "</text>";
       s += '<rect x="' + kiri + '" y="' + y + '" width="' + lw + '" height="14" rx="7" fill="var(--garis)"/>';
-      s += '<rect x="' + kiri + '" y="' + y + '" width="' + w.toFixed(1) + '" height="14" rx="7" fill="' + (d.warna || "var(--ungu)") + '"/>';
+      s += '<rect class="bh" style="--i:' + i + '" x="' + kiri + '" y="' + y + '" width="' + w.toFixed(1) + '" height="14" rx="7" fill="' + (d.warna || "var(--ungu)") + '"/>';
       s += '<text class="nilai" x="' + (kiri + lw + 6) + '" y="' + (y + 11) + '">' + esc(d.teks != null ? d.teks : fmt(d.value)) + "</text>";
     });
     s += "</svg>";
     return s;
   }
 
-  /* Elbow: SSE terhadap k */
+  /* Elbow */
   function elbow(data) {
     return garis(
       data.map((d) => ({ label: "k" + d.k, value: Math.round(d.sse) })),
@@ -191,5 +201,5 @@
     );
   }
 
-  global.Grafik = { ring, batang, garis, sebar, radar, hbatang, elbow };
+  global.Grafik = { ring, batang, garis, sebar, radar, hbatang, elbow, maksRapi };
 })(typeof window !== "undefined" ? window : globalThis);
