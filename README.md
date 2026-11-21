@@ -42,13 +42,19 @@ melihat gambaran kebiasaan belajar sekelompok mahasiswa.
 | FR-02 | Kelola riwayat sesi | Filter 7/30 hari/semua, sunting, hapus, rekap per hari |
 | FR-03 | Dasbor | Ring target harian, statistik pekan, grafik 7 hari, mata kuliah terbanyak, posisi cluster |
 | FR-04 | Analisis K-Means | Jalankan clustering dengan k=2..5, scatter plot, profil tiap cluster, radar, elbow, silhouette |
-| FR-05 | Posisi pengguna | Vektor fitur pengguna ditempatkan ke centroid terdekat, dibandingkan dengan rata-rata kelompoknya |
-| FR-06 | Kelola dataset | Tabel 90 responden, pencarian, filter prodi, hapus baris, impor CSV, ekspor CSV, reset |
-| FR-07 | Laporan | Rekap pekan, proyeksi regresi linear, ringkasan cluster, cetak/PDF, ekspor CSV/JSON |
-| FR-08 | Tema & PWA | Dua tema: **malam neon** (bawaan) dan **siang**; dapat dipasang sebagai aplikasi (service worker) |
-| FR-09 | Onboarding & pengaturan | Tur 3 langkah saat pertama dibuka; atur nama, target harian, k bawaan, tema, hapus data |
-| FR-10 | Catatan Nora | Saran kontekstual: runtutan hari, tidur kurang, HP berlebih, atau posisi cluster |
-| FR-11 | Animasi & aksesibilitas | Angka berjalan, grafik tumbuh, transisi tab, konfeti target, latar kota beranimasi; otomatis tenang bila *prefers-reduced-motion* |
+| FR-05 | Visualisasi hasil clustering | Scatter plot, radar perbandingan profil, batang profil tiap cluster, grafik elbow |
+| FR-06 | Posisi pengguna | Vektor fitur pengguna ditempatkan ke centroid terdekat, dibandingkan dengan rata-rata kelompoknya |
+| FR-07 | Kelola dataset | Tabel 90 responden, pencarian, filter prodi, hapus baris, impor CSV, ekspor CSV, reset |
+| FR-08 | Laporan | Rekap pekan, proyeksi regresi linear, ringkasan cluster, cetak/PDF, ekspor CSV/JSON |
+| FR-09 | Pengaturan | Nama, target harian, k bawaan, tema, hapus seluruh riwayat |
+| FR-10 | Panduan awal | Tur 3 langkah saat pertama dibuka; dapat dilewati |
+| FR-11 | Catatan Nora | Saran kontekstual: runtutan hari, tidur kurang, HP berlebih, atau posisi cluster |
+
+Penomoran di atas sama dengan yang dipakai pada dokumen
+[progres Tahap 2](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/tahap-2-analisis-kebutuhan.md),
+sehingga setiap FR dapat dilacak ke modul kode dan ke penanggung jawabnya. Tema gelap/terang, animasi,
+dan mode luring (PWA) **tidak** dihitung sebagai FR karena tidak menambah kemampuan bisnis — ketiganya
+dibahas sebagai kebutuhan nonfungsional.
 
 **Non-fungsional utama:** antarmuka mobile-first (≤390 px tetap rapi), tanpa dependensi pihak ketiga,
 hasil clustering deterministik (bibit tetap), waktu analisis < 100 ms untuk 90 data, data pengguna
@@ -253,7 +259,7 @@ Versi web ini sudah memuat seluruh alur bisnis dan komponen Data Sains. Untuk me
 | Basis data | SQLite: `pengguna`, `sesi_belajar`, `responden_survei`, `hasil_cluster`, `laporan` |
 | Model | scikit-learn `KMeans` + `StandardScaler`; hasil disimpan ke `hasil_cluster` |
 | Frontend | halaman ini dipindah memanggil API (lapisan `data` dipisah agar mudah ditukar) |
-| Pengujian | unit (pytest untuk model), integration (API + DB), black-box (skenario FR-01..FR-08) |
+| Pengujian | unit (pytest untuk model), integration (API + DB), black-box (skenario FR-01..FR-11) |
 | UAT | kuesioner 10 pernyataan skala Likert kepada 15–20 mahasiswa |
 
 Pemisahan berkas sudah disiapkan untuk itu: `kmeans.js` tidak menyentuh DOM, sehingga logikanya bisa
@@ -261,17 +267,20 @@ langsung dibandingkan dengan hasil scikit-learn sebagai uji silang.
 
 ---
 
-## 11. Pembagian tugas (contoh, 4 anggota)
+## 11. Pembagian tugas (5 anggota)
 
-| Anggota | Tanggung jawab | Diagram |
-|---------|----------------|---------|
-| 1 | FR-01, FR-02 — pencatatan & pengelolaan sesi | 1 Activity + 1 Sequence |
-| 2 | FR-03, FR-07 — dasbor & laporan | 1 Activity + 1 Sequence |
-| 3 | FR-04, FR-05 — mesin K-Means & penempatan cluster | 1 Activity + 1 Sequence |
-| 4 | FR-06 — pengelolaan dataset & impor CSV | 1 Activity + 1 Sequence |
-| semua | Use Case & Class Diagram | kolaboratif |
+| Anggota | Nama | NIM | Tanggung jawab | Diagram |
+|:-------:|------|-----|----------------|---------|
+| 1 | Yuniar Zahra Wiyani | 60124004 | FR-01, FR-02 — pencatatan & pengelolaan sesi | 1 Activity + 1 Sequence |
+| 2 | Aninda Rizqi Amelia | 60124009 | FR-03, FR-08 — dasbor & laporan | 1 Activity + 1 Sequence |
+| 3 | Maheswari Pasa Putri Syamsudar | 60124010 | FR-04, FR-05 — mesin K-Means & visualisasi | 1 Activity + 1 Sequence |
+| 4 | Hasan | 60124013 | FR-06, FR-07 — penempatan posisi & dataset | 1 Activity + 1 Sequence |
+| 5 | Sifa Sabrina | 60124023 | FR-09, FR-10, FR-11 — pengaturan, panduan, saran | 1 Activity + 1 Sequence |
+| semua | — | — | Use Case & Class Diagram | kolaboratif |
 
 Kontribusi ditelusuri lewat riwayat commit; setiap anggota memegang minimal satu FR.
+Rincian pembagian dan penanggung jawab per FR ada di
+[repositori dokumen progres](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress).
 
 ---
 
