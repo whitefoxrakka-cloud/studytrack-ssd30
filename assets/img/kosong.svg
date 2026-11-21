@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" width="320" height="220" role="img" aria-label="Ilustrasi belum ada data">
   <defs>
     <linearGradient id="p" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#b7a4ff"/><stop offset="1" stop-color="#6d4aff"/>
+      <stop offset="0" stop-color="#67e8f9"/><stop offset="1" stop-color="#7c5cff"/>
     </linearGradient>
   </defs>
-  <circle cx="160" cy="112" r="84" fill="#6d4aff" opacity=".07"/>
-  <circle cx="160" cy="112" r="60" fill="#ff7ab8" opacity=".06" stroke="#e6ddff" stroke-width="2" stroke-dasharray="5 7"/>
+  <circle cx="160" cy="112" r="84" fill="#7c5cff" opacity=".07"/>
+  <circle cx="160" cy="112" r="60" fill="#ff2d95" opacity=".06" stroke="#bfe9ff" stroke-width="2" stroke-dasharray="5 7"/>
   <g>
     <path d="M104 78h48l12 14h56a10 10 0 0 1 10 10v52a10 10 0 0 1-10 10H104a10 10 0 0 1-10-10V88a10 10 0 0 1 10-10z" fill="url(#p)" opacity=".18"/>
     <path d="M104 78h48l12 14h56a10 10 0 0 1 10 10v52a10 10 0 0 1-10 10H104a10 10 0 0 1-10-10V88a10 10 0 0 1 10-10z" fill="none" stroke="url(#p)" stroke-width="3.4" stroke-linejoin="round"/>
-    <rect x="132" y="118" width="56" height="6" rx="3" fill="#c9bcff"/>
-    <rect x="132" y="132" width="38" height="6" rx="3" fill="#e6ddff"/>
+    <rect x="132" y="118" width="56" height="6" rx="3" fill="#a5f3fc"/>
+    <rect x="132" y="132" width="38" height="6" rx="3" fill="#bfe9ff"/>
   </g>
-  <path d="M232 62l3.4 10 10 3.4-10 3.4-3.4 10-3.4-10-10-3.4 10-3.4z" fill="#f5a524" opacity=".85"/>
-  <circle cx="86" cy="146" r="5" fill="#ff7ab8" opacity=".6"/>
+  <path d="M232 62l3.4 10 10 3.4-10 3.4-3.4 10-3.4-10-10-3.4 10-3.4z" fill="#ffb020" opacity=".85"/>
+  <circle cx="86" cy="146" r="5" fill="#ff2d95" opacity=".6"/>
 </svg>

@@ -46,7 +46,7 @@
     const maks = maksRapi(Math.max(1, ...data.map((d) => d.value)));
     const n = Math.max(1, data.length);
     const lebar = (lw / n) * 0.6;
-    const warna = opsi.warna || "var(--ungu)";
+    const warna = opsi.warna || "var(--ungu2)";
     let s = '<svg viewBox="0 0 ' + W + " " + H + '" class="grafik" role="img" aria-label="' + esc(opsi.judul || "grafik batang") + '">';
     for (let i = 0; i <= 2; i++) {
       const y = atas + (lh * i) / 2;
@@ -73,7 +73,7 @@
     const lw = W - kiri - kanan, lh = H - atas - bawah;
     const maks = maksRapi(Math.max(1, ...data.map((d) => d.value)));
     const n = Math.max(1, data.length - 1);
-    const warna = opsi.warna || "var(--ungu)";
+    const warna = opsi.warna || "var(--ungu2)";
     const titik = data.map((d, i) => ({ x: kiri + (lw * i) / n, y: atas + lh - (d.value / maks) * lh, d }));
 
     let panjang = 0;
@@ -94,7 +94,7 @@
     s += '<path class="gj" style="--panjang:' + panjang + ';stroke-dasharray:' + panjang + '" d="' + jalur + '" fill="none" stroke="' + warna +
       '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
     titik.forEach((p, i) => {
-      s += '<circle class="tk" style="--i:' + (i + 2) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3.4" fill="var(--card)" stroke="' + warna + '" stroke-width="2.4"><title>' +
+      s += '<circle class="tk" style="--i:' + (i + 2) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3.4" fill="var(--panel-pekat)" stroke="' + warna + '" stroke-width="2.4"><title>' +
         esc(p.d.label + ": " + fmt(p.d.value)) + "</title></circle>";
       s += '<text class="label-sumbu" x="' + p.x.toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.d.label) + "</text>";
     });
@@ -186,7 +186,7 @@
       const labelPendek = d.label.length > 16 ? d.label.slice(0, 15) + "…" : d.label;
       s += '<text class="label-sumbu" x="' + (kiri - 8) + '" y="' + (y + 12) + '" text-anchor="end" style="fill:var(--text)">' + esc(labelPendek) + "</text>";
       s += '<rect x="' + kiri + '" y="' + y + '" width="' + lw + '" height="14" rx="7" fill="var(--garis)"/>';
-      s += '<rect class="bh" style="--i:' + i + '" x="' + kiri + '" y="' + y + '" width="' + w.toFixed(1) + '" height="14" rx="7" fill="' + (d.warna || "var(--ungu)") + '"/>';
+      s += '<rect class="bh" style="--i:' + i + '" x="' + kiri + '" y="' + y + '" width="' + w.toFixed(1) + '" height="14" rx="7" fill="' + (d.warna || "var(--ungu2)") + '"/>';
       s += '<text class="nilai" x="' + (kiri + lw + 6) + '" y="' + (y + 11) + '">' + esc(d.teks != null ? d.teks : fmt(d.value)) + "</text>";
     });
     s += "</svg>";

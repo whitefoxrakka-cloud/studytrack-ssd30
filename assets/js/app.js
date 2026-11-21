@@ -16,7 +16,7 @@
     return {
       sesi: [],
       dataset: [],
-      pengaturan: { tema: "terang", nama: "", targetHarian: TARGET_BAWAAN, k: 3, sudahKenal: false },
+      pengaturan: { tema: "gelap", nama: "", targetHarian: TARGET_BAWAAN, k: 3, sudahKenal: false },
     };
   }
   function muat() {
@@ -173,19 +173,19 @@
   };
 
   /* ---------------- Komponen ---------------- */
-  function kartu(judul, ikon, isi, kanan) {
+  function kartu(judul, namaIkon, isi, kanan) {
     idxKartu++;
     return (
-      '<section class="kartu" style="--i:' + idxKartu + '"><h2><span class="ikon">' + ikon + "</span>" + judul +
+      '<section class="kartu" style="--i:' + idxKartu + '"><h2>' + Ikon.bungkus(namaIkon) + judul +
       (kanan ? '<span class="kanan">' + kanan + "</span>" : "") +
       "</h2>" + isi + "</section>"
     );
   }
 
-  function stat(ikon, label, nilai, satuan) {
+  function stat(namaIkon, label, nilai, satuan) {
     idxKartu++;
     return (
-      '<div class="stat" style="--i:' + idxKartu + '"><div class="lbl">' + ikon + " " + label + "</div>" +
+      '<div class="stat" style="--i:' + idxKartu + '"><div class="lbl">' + Ikon.bungkus(namaIkon) + label + "</div>" +
       '<div class="angka">' + nilai + " <small>" + satuan + "</small></div></div>"
     );
   }
@@ -195,10 +195,10 @@
     return '<span class="pil ' + j + '">' + j + "</span>";
   }
 
-  function kosongkan(emo, teks, tombol, gambar) {
+  function kosongkan(namaIkon, teks, tombol, gambar) {
     return (
       '<div class="kosong">' +
-      (gambar ? '<img src="' + gambar + '" alt="" loading="lazy">' : '<span style="font-size:34px;display:block;margin-bottom:6px">' + emo + "</span>") +
+      (gambar ? '<img src="' + gambar + '" alt="" loading="lazy">' : '<span class="ikon ikon-kosong">' + Ikon.svg(namaIkon) + "</span>") +
       teks + (tombol || "") +
       "</div>"
     );
@@ -206,14 +206,14 @@
 
   /* ---------------- Wawasan ---------------- */
   function wawasan(f, p) {
-    if (!f) return { ikon: "🌱", teks: "Belum ada sesi pekan ini. Catat satu sesi dulu — 25 menit pun sudah cukup untuk mulai." };
+    if (!f) return { ikon: "tunas", teks: "Belum ada sesi pekan ini. Catat satu sesi dulu — 25 menit pun sudah cukup untuk mulai." };
     const streak = runtunHari();
-    if (streak >= 3) return { ikon: "🔥", teks: "Kamu mencatat " + streak + " hari berturut-turut. Runtutan seperti ini yang paling berpengaruh pada hasil, bukan sesi maraton sesekali." };
-    if (f.tidur < 6.5) return { ikon: "😴", teks: "Tidurmu rata-rata " + n1(f.tidur) + " jam. Di bawah 7 jam, sesi belajar berikutnya cenderung kurang menyerap — coba majukan jam tidur 30 menit." };
-    if (f.hp > 2) return { ikon: "📱", teks: "HP memakan " + n1(f.hp) + " jam per hari saat belajar. Satu sesi 25 menit tanpa HP biasanya lebih baik daripada 60 menit sambil memegang ponsel." };
-    if (p && p.profil.nama === "Kebiasaan Tinggi") return { ikon: "✨", teks: "Kebiasaanmu masuk kelompok teratas. Pertahankan, dan jaga agar tidak menambah durasi dengan mengorbankan tidur." };
-    if (p && p.profil.nama === "Perlu Ditingkatkan") return { ikon: "🎯", teks: "Fokus ke satu hal dulu: tambah satu hari belajar. Frekuensi lebih mudah dinaikkan daripada durasi." };
-    return { ikon: "📈", teks: "Pekan ini " + jam(f.totalMenit) + " dalam " + f.sesi + " sesi. Tambah satu sesi 45 menit lagi untuk naik ke kelompok berikutnya." };
+    if (streak >= 3) return { ikon: "api", teks: "Kamu mencatat " + streak + " hari berturut-turut. Runtutan seperti ini yang paling berpengaruh pada hasil, bukan sesi maraton sesekali." };
+    if (f.tidur < 6.5) return { ikon: "tidur", teks: "Tidurmu rata-rata " + n1(f.tidur) + " jam. Di bawah 7 jam, sesi belajar berikutnya cenderung kurang menyerap — coba majukan jam tidur 30 menit." };
+    if (f.hp > 2) return { ikon: "ponsel", teks: "HP memakan " + n1(f.hp) + " jam per hari saat belajar. Satu sesi 25 menit tanpa HP biasanya lebih baik daripada 60 menit sambil memegang ponsel." };
+    if (p && p.profil.nama === "Kebiasaan Tinggi") return { ikon: "kilau", teks: "Kebiasaanmu masuk kelompok teratas. Pertahankan, dan jaga agar tidak menambah durasi dengan mengorbankan tidur." };
+    if (p && p.profil.nama === "Perlu Ditingkatkan") return { ikon: "target", teks: "Fokus ke satu hal dulu: tambah satu hari belajar. Frekuensi lebih mudah dinaikkan daripada durasi." };
+    return { ikon: "naik", teks: "Pekan ini " + jam(f.totalMenit) + " dalam " + f.sesi + " sesi. Tambah satu sesi 45 menit lagi untuk naik ke kelompok berikutnya." };
   }
 
   /* ---------------- Tab: Dasbor ---------------- */
@@ -244,9 +244,9 @@
     if (!f) {
       html += kartu(
         "Mulai dari sini",
-        "🌱",
+        "tunas",
         kosongkan(
-          "📖",
+          "buku",
           "Belum ada data. Catat sesi belajarmu, atau isi contoh 14 hari untuk melihat cara kerja analisisnya.",
           '<div class="baris-tombol" style="justify-content:center">' +
             '<button class="tombol mini" data-act="tab" data-tab="jurnal">Catat sesi</button>' +
@@ -254,17 +254,17 @@
           "assets/img/hero.svg"
         )
       );
-      html += kartu("Kenapa perlu dicatat?", "💡", '<p class="kecil" style="margin:0">Kebiasaan belajar sulit dinilai dari ingatan. Dengan enam variabel yang tercatat — durasi, frekuensi, tidur, tugas, HP, dan belajar mandiri — aplikasi bisa mengelompokkan polamu dan menunjukkan bagian mana yang perlu diperbaiki.</p>');
+      html += kartu("Kenapa perlu dicatat?", "lampu", '<p class="kecil" style="margin:0">Kebiasaan belajar sulit dinilai dari ingatan. Dengan enam variabel yang tercatat — durasi, frekuensi, tidur, tugas, HP, dan belajar mandiri — aplikasi bisa mengelompokkan polamu dan menunjukkan bagian mana yang perlu diperbaiki.</p>');
       return html;
     }
 
     const fokus = rata(sesiRentang(7).map((s) => angka(s.fokus)).filter((v) => v > 0));
     html +=
       '<div class="petak">' +
-      stat("⏱️", "Jam belajar", naik((f.totalMenit / 60).toFixed(1), 1), "jam / 7 hari") +
-      stat("📚", "Sesi", naik(f.sesi, 0), "sesi") +
-      stat("📅", "Hari aktif", naik(f.frekuensi, 0), "dari 7 hari") +
-      stat("🎯", "Rata fokus", fokus ? naik(fokus.toFixed(1), 1) : "–", "dari 5") +
+      stat("timer", "Jam belajar", naik((f.totalMenit / 60).toFixed(1), 1), "jam / 7 hari") +
+      stat("buku", "Sesi", naik(f.sesi, 0), "sesi") +
+      stat("kalender", "Hari aktif", naik(f.frekuensi, 0), "dari 7 hari") +
+      stat("target", "Rata fokus", fokus ? naik(fokus.toFixed(1), 1) : "–", "dari 5") +
       "</div>";
 
     html += kartu(
@@ -276,7 +276,7 @@
 
     html += kartu(
       "Posisi kamu",
-      "🧠",
+      "chip",
       '<div class="cluster-kartu" style="border-left-color:' + p.profil.warna + '">' +
         "<h3>" + esc(p.profil.nama) + '<span class="jumlah">jarak ' + n2(p.jarak) + "</span></h3>" +
         '<p style="margin-top:8px">' + esc(SARAN[p.profil.nama] || "") + "</p>" +
@@ -288,8 +288,8 @@
     const menitPerHari = hari.map((d) => jumlah(S.sesi.filter((s) => s.tanggal === d).map((s) => angka(s.menit))));
     html += kartu(
       "Tujuh hari terakhir",
-      "📊",
-      Grafik.batang(hari.map((d, i) => ({ label: hariPendek(d), value: menitPerHari[i], warna: i === 6 ? "var(--pink)" : "var(--ungu)" })), { judul: "menit belajar per hari", tinggi: 140 }) +
+      "batang",
+      Grafik.batang(hari.map((d, i) => ({ label: hariPendek(d), value: menitPerHari[i], warna: i === 6 ? "var(--pink)" : "var(--ungu2)" })), { judul: "menit belajar per hari", tinggi: 140 }) +
         '<p class="kecil" style="margin:8px 0 0">Satuan menit. Batang merah muda = hari ini.</p>',
       jam(jumlah(menitPerHari)) + " total"
     );
@@ -303,7 +303,7 @@
       .map((k) => ({ label: k, value: perMatkul[k], teks: jam(perMatkul[k]) }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 5);
-    if (urutMatkul.length) html += kartu("Mata kuliah terbanyak", "📖", Grafik.hbatang(urutMatkul, { judul: "menit per mata kuliah" }));
+    if (urutMatkul.length) html += kartu("Mata kuliah terbanyak", "buku", Grafik.hbatang(urutMatkul, { judul: "menit per mata kuliah" }));
 
     return html;
   }
@@ -337,7 +337,7 @@
     let html = "";
     html += kartu(
       sedang ? "Sunting sesi" : "Catat sesi belajar",
-      sedang ? "✏️" : "✍️",
+      sedang ? "pensil" : "pena",
       '<form id="formSesi" autocomplete="off">' +
         '<div class="baris"><div class="kolom"><label for="fTanggal">Tanggal</label>' +
         '<input type="date" id="fTanggal" name="tanggal" required value="' + esc(sedang ? sedang.tanggal : iso(new Date())) + '"></div>' +
@@ -373,7 +373,7 @@
       "</div>";
 
     if (!daftar.length) {
-      html += kartu("Riwayat", "🗓️", kosongkan("🌙", "Belum ada sesi pada rentang ini.", "", "assets/img/kosong.svg"));
+      html += kartu("Riwayat", "kalender", kosongkan("bulan", "Belum ada sesi pada rentang ini.", "", "assets/img/kosong.svg"));
       return html;
     }
 
@@ -384,7 +384,7 @@
 
     html += kartu(
       "Riwayat sesi",
-      "🗓️",
+      "kalender",
       Object.keys(perHari)
         .sort((a, b) => b.localeCompare(a))
         .map((tanggal) => {
@@ -399,15 +399,16 @@
             isi.map((s) =>
               '<div class="item"><div class="item-isi">' +
                 '<div class="item-judul">' + esc(s.matkul || "Sesi belajar") + " " + pil(s.jenis) + "</div>" +
-                '<div class="item-meta"><span>⏱️ ' + jam(s.menit) + "</span><span>🎯 fokus " + angka(s.fokus) + "/5</span>" +
-                (angka(s.hpMenit) ? "<span>📱 " + jam(s.hpMenit) + "</span>" : "") +
-                (angka(s.tugas) ? "<span>✅ " + angka(s.tugas) + " tugas</span>" : "") +
-                (angka(s.tidur) ? "<span>😴 " + n1(s.tidur) + " jam</span>" : "") + "</div>" +
+                '<div class="item-meta"><span>' + Ikon.bungkus("timer") + jam(s.menit) + "</span>" +
+                "<span>" + Ikon.bungkus("target") + "fokus " + angka(s.fokus) + "/5</span>" +
+                (angka(s.hpMenit) ? "<span>" + Ikon.bungkus("ponsel") + jam(s.hpMenit) + "</span>" : "") +
+                (angka(s.tugas) ? "<span>" + Ikon.bungkus("cek") + angka(s.tugas) + " tugas</span>" : "") +
+                (angka(s.tidur) ? "<span>" + Ikon.bungkus("tidur") + n1(s.tidur) + " jam</span>" : "") + "</div>" +
                 (s.catatan ? '<div class="item-cat">' + esc(s.catatan) + "</div>" : "") +
               "</div>" +
-              '<button class="hapus" data-act="ulang-sesi" data-id="' + s.id + '" title="Ulangi sesi ini">📋</button>' +
-              '<button class="hapus" data-act="edit-sesi" data-id="' + s.id + '" title="Sunting">✏️</button>' +
-              '<button class="hapus" data-act="hapus-sesi" data-id="' + s.id + '" title="Hapus">🗑️</button>' +
+              '<button class="hapus" data-act="ulang-sesi" data-id="' + s.id + '" title="Ulangi sesi ini">' + Ikon.svg("ulang") + "</button>" +
+              '<button class="hapus" data-act="edit-sesi" data-id="' + s.id + '" title="Sunting">' + Ikon.svg("pensil") + "</button>" +
+              '<button class="hapus" data-act="hapus-sesi" data-id="' + s.id + '" title="Hapus">' + Ikon.svg("sampah") + "</button>" +
               "</div>"
             ).join("") +
             "</div></div>"
@@ -429,7 +430,7 @@
 
     html += kartu(
       "Metode",
-      "⚙️",
+      "gir",
       '<p class="kecil" style="margin:0 0 10px">K-Means pada ' + S.dataset.length +
         " responden, 6 fitur, distandarkan z-score, inisialisasi k-means++, bibit tetap 42 sehingga hasil dapat diulang.</p>" +
       '<div class="chip-baris">' + [2, 3, 4, 5].map((k) =>
@@ -442,28 +443,28 @@
 
     html +=
       '<div class="petak">' +
-      stat("🧩", "Cluster", naik(h.k, 0), "kelompok") +
-      stat("📐", "Silhouette", n2(h.silhouette), "kualitas") +
-      stat("🔁", "Iterasi", naik(h.model.iterasi, 0), "sampai stabil") +
-      stat("📉", "SSE", naik(Math.round(h.model.sse), 0), "semakin kecil") +
+      stat("klaster", "Cluster", naik(h.k, 0), "kelompok") +
+      stat("penggaris", "Silhouette", n2(h.silhouette), "kualitas") +
+      stat("ulang", "Iterasi", naik(h.model.iterasi, 0), "sampai stabil") +
+      stat("turun", "SSE", naik(Math.round(h.model.sse), 0), "semakin kecil") +
       "</div>";
 
     const titik = S.dataset.map((b, i) => {
       const pr = h.profil.find((x) => x.cluster === h.model.label[i]);
       return { x: angka(b.durasi), y: angka(b.frekuensi), warna: pr ? pr.warna : "#999", nama: b.id + " — " + (pr ? pr.nama : "") };
     });
-    if (f) titik.push({ x: f.durasi, y: f.frekuensi, warna: "#111", besar: true, nama: "Kamu" });
+    if (f) titik.push({ x: f.durasi, y: f.frekuensi, warna: "#ff2d95", besar: true, nama: "Kamu" });
     html += kartu(
       "Sebaran responden",
-      "🎯",
+      "target",
       Grafik.sebar(titik, { xLabel: "durasi belajar (jam/hari)", yLabel: "frekuensi (hari/minggu)", tinggi: 250 }) +
-        '<p class="kecil" style="margin:8px 0 0">Tiap titik satu responden, warna mengikuti cluster. Titik hitam besar = posisimu pekan ini.</p>'
+        '<p class="kecil" style="margin:8px 0 0">Tiap titik satu responden, warna mengikuti cluster. Titik merah muda besar = posisimu pekan ini.</p>'
     );
 
     const maksFitur = KMeans.FITUR.map((ft) => Math.max(...h.profil.map((pr) => angka(pr.rata[ft.kunci]))) || 1);
     html += kartu(
       "Profil tiap cluster",
-      "🧬",
+      "dna",
       h.profil.slice().sort((a, b) => b.skor - a.skor).map((pr) =>
         '<div class="cluster-kartu" style="border-left-color:' + pr.warna + '">' +
           "<h3>" + esc(pr.nama) + '<span class="jumlah">' + pr.jumlah + " org · " + Math.round(pr.persen) + "%</span></h3>" +
@@ -485,7 +486,7 @@
     const maksRadar = KMeans.FITUR.map((ft) => Math.max(...h.profil.map((pr) => angka(pr.rata[ft.kunci]))) * 1.15 || 1);
     html += kartu(
       "Perbandingan profil",
-      "🕸️",
+      "jaring",
       Grafik.radar(
         h.profil.map((pr) => ({ nama: pr.nama, warna: pr.warna, nilai: KMeans.FITUR.map((ft) => angka(pr.rata[ft.kunci])) })),
         KMeans.FITUR.map((ft) => ft.pendek),
@@ -498,7 +499,7 @@
 
     html += kartu(
       "Penentuan jumlah cluster",
-      "📈",
+      "naik",
       Grafik.elbow(h.elbow) +
         '<p class="kecil" style="margin:8px 0 0">SSE turun tajam sampai k=3, lalu melandai. Karena itu k=3 dipakai sebagai nilai bawaan.</p>'
     );
@@ -506,14 +507,14 @@
     if (p) {
       html += kartu(
         "Posisi kamu",
-        "📍",
+        "pin",
         '<div class="cluster-kartu" style="border-left-color:' + p.profil.warna + '">' +
           "<h3>" + esc(p.profil.nama) + '<span class="jumlah">jarak ' + n2(p.jarak) + "</span></h3>" +
           "<p>Berdasarkan " + f.sesi + " sesi dalam 7 hari terakhir (" + jam(f.totalMenit) + ").</p>" +
           "</div>" + perbandingan(f, p.profil)
       );
     } else {
-      html += kartu("Posisi kamu", "📍", kosongkan("🫥", "Belum ada sesi dalam 7 hari terakhir, jadi posisimu belum bisa ditempatkan."));
+      html += kartu("Posisi kamu", "pin", kosongkan("mata", "Belum ada sesi dalam 7 hari terakhir, jadi posisimu belum bisa ditempatkan."));
     }
 
     return html;
@@ -540,7 +541,7 @@
 
     html += kartu(
       "Dataset survei",
-      "🗂️",
+      "arsip",
       '<p class="kecil" style="margin:0 0 10px">' + S.dataset.length + " responden · 6 variabel. Data bawaan bersifat sintetis (arketipe + derau); ganti dengan hasil survei asli lewat impor CSV.</p>" +
         '<div class="baris"><div class="kolom"><input type="text" id="cari" placeholder="Cari ID / prodi…" value="' + esc(cari) + '" data-cari aria-label="Cari responden"></div>' +
         '<div class="kolom"><select data-prodi aria-label="Filter prodi">' +
@@ -557,7 +558,7 @@
 
     html += kartu(
       "Statistik deskriptif",
-      "📐",
+      "penggaris",
       '<div class="tabel-bungkus"><table><thead><tr><th>Fitur</th><th>Rata-rata</th><th>Simpangan</th><th>Min</th><th>Maks</th></tr></thead><tbody>' +
         KMeans.FITUR.map((ft) => {
           const kol = S.dataset.map((b) => angka(b[ft.kunci]));
@@ -576,16 +577,16 @@
 
     html += kartu(
       "Daftar responden",
-      "📋",
+      "papan",
       daftar.length
         ? '<div class="tabel-bungkus" style="max-height:440px;overflow-y:auto"><table><thead><tr>' + kepala + "</tr></thead><tbody>" +
           daftar.map((b) =>
             "<tr><td>" + esc(b.id) + "</td><td>" + esc(b.prodi) + "</td><td>" + esc(b.angkatan) + "</td>" +
             KMeans.FITUR.map((ft) => "<td class='num'>" + n1(b[ft.kunci]) + "</td>").join("") +
-            '<td><button class="hapus" data-act="hapus-data" data-id="' + esc(b.id) + '" title="Hapus">🗑️</button></td></tr>'
+            '<td><button class="hapus" data-act="hapus-data" data-id="' + esc(b.id) + '" title="Hapus">' + Ikon.svg("sampah") + "</button></td></tr>"
           ).join("") +
           "</tbody></table></div>"
-        : kosongkan("🔍", "Tidak ada responden yang cocok dengan filter.", "", "assets/img/kosong.svg"),
+        : kosongkan("cari", "Tidak ada responden yang cocok dengan filter.", "", "assets/img/kosong.svg"),
       "klik judul kolom"
     );
 
@@ -633,14 +634,14 @@
 
     html += kartu(
       "Rekap pekan ini",
-      "📄",
+      "dokumen",
       '<div class="baris" style="align-items:center;gap:18px">' +
         '<div style="flex:1;min-width:140px">' +
         '<div class="angka-besar">' + (f ? jam(f.totalMenit) : "0m") + ' <small>total</small></div>' +
         '<p class="kecil" style="margin:6px 0 0">' +
         (f ? f.sesi + " sesi · " + f.frekuensi + "/7 hari aktif · rata-rata " + jam(f.totalMenit / Math.max(1, f.frekuensi)) + " per hari aktif" : "Belum ada sesi tercatat.") +
         "</p></div>" +
-        (f ? '<div style="text-align:center">' + Grafik.ring(Math.min(100, (f.frekuensi / 7) * 100), "var(--ungu)") + '<div class="kecil">konsistensi</div></div>' : "") +
+        (f ? '<div style="text-align:center">' + Grafik.ring(Math.min(100, (f.frekuensi / 7) * 100), "var(--ungu2)") + '<div class="kecil">konsistensi</div></div>' : "") +
         "</div>" +
         (hari.length
           ? '<hr class="sep"><div class="tabel-bungkus"><table><thead><tr><th>Tanggal</th><th>Sesi</th><th>Durasi</th><th>Tugas</th></tr></thead><tbody>' +
@@ -651,14 +652,14 @@
 
     html += kartu(
       "Proyeksi pekan depan",
-      "🔮",
+      "kristal",
       Grafik.garis(pekan.map((p) => ({ label: p.label, value: Math.round(p.value) })), { judul: "menit belajar per pekan", warna: "var(--pink)", tinggi: 150 }) +
         '<p class="kecil" style="margin:10px 0 0">Regresi linear atas 4 pekan terakhir: <b>' + Math.round(proyeksi) + " menit</b> (" + jam(proyeksi) + ") untuk pekan depan. Kecocokan garis R² = " + n2(reg.r2) + ".</p>"
     );
 
     html += kartu(
       "Hasil analisis",
-      "🧠",
+      "chip",
       '<div class="tabel-bungkus"><table><thead><tr><th>Cluster</th><th>Anggota</th><th>Porsi</th><th>Skor</th></tr></thead><tbody>' +
         h.profil.slice().sort((a, b) => b.skor - a.skor).map((p) =>
           "<tr><td>" + esc(p.nama) + "</td><td class='num'>" + p.jumlah + "</td><td class='num'>" + Math.round(p.persen) + "%</td><td class='num'>" + n2(p.skor) + "</td></tr>").join("") +
@@ -668,7 +669,7 @@
 
     html += kartu(
       "Berkas",
-      "⬇️",
+      "unduh",
       '<div class="baris-tombol no-print">' +
         '<button class="tombol mini" data-act="cetak">Cetak / simpan PDF</button>' +
         '<button class="tombol mini" data-act="ekspor-csv-sesi">Ekspor sesi (CSV)</button>' +
@@ -709,7 +710,7 @@
   function bukaTentang() {
     const h = hasil();
     Anim.lembar(
-      '<img src="assets/img/metode.svg" alt="Alur metode: data, standardisasi, K-Means, tiga cluster" style="width:100%;border-radius:14px;background:var(--card2);padding:8px">' +
+      '<img src="assets/img/metode.svg" alt="Alur metode: data, standardisasi, K-Means, tiga cluster" style="width:100%;border-radius:14px;background:var(--panel-pekat);padding:8px">' +
         '<p class="kecil" style="margin:12px 0 0">StudyTrack versi ' + VERSI + " — aplikasi analisis kebiasaan belajar mahasiswa. " +
         "Enam variabel (durasi, frekuensi, tidur, tugas, HP, belajar mandiri) distandarkan lalu dikelompokkan dengan K-Means.</p>" +
         '<div class="tabel-bungkus" style="margin-top:12px"><table><tbody>' +
@@ -727,17 +728,17 @@
   /* ---------------- Lembar: kenalan ---------------- */
   const LANGKAH_KENAL = [
     {
-      ikon: "📖",
+      ikon: "buku",
       judul: "Catat sesi belajarmu",
       teks: "Setiap selesai belajar, catat durasi, fokus, dan berapa lama kamu memegang HP. Cukup 20 detik — tapi dari situ polamu terbaca.",
     },
     {
-      ikon: "🧠",
+      ikon: "chip",
       judul: "Mesin K-Means membaca polanya",
       teks: "Enam variabel distandarkan, lalu dikelompokkan menjadi tiga: Kebiasaan Tinggi, Sedang, dan Perlu Ditingkatkan. Kamu bisa melihat posisimu di antara 90 responden.",
     },
     {
-      ikon: "🎯",
+      ikon: "target",
       judul: "Dapatkan saran yang terukur",
       teks: "Bukan sekadar angka. Aplikasi menunjukkan variabel mana yang paling menahanmu, dan seberapa jauh dari rata-rata kelompokmu.",
     },
@@ -761,7 +762,7 @@
     const l = LANGKAH_KENAL[langkahKenal];
     isi.innerHTML =
       '<div class="isi-masuk" style="text-align:center;padding:6px 0 4px">' +
-      '<div style="font-size:52px;line-height:1;margin-bottom:10px">' + l.ikon + "</div>" +
+      '<div class="ikon-besar">' + Ikon.svg(l.ikon) + "</div>" +
       '<h4 style="margin:0 0 8px;font-size:16px">' + l.judul + "</h4>" +
       '<p class="kecil" style="margin:0;font-size:12.5px">' + l.teks + "</p>" +
       "</div>" +
@@ -772,11 +773,11 @@
 
   /* ---------------- Render ---------------- */
   const TAB = [
-    { id: "dasbor", nama: "Dasbor", ikon: "🏠", fn: vDasbor },
-    { id: "jurnal", nama: "Jurnal", ikon: "✍️", fn: vJurnal },
-    { id: "analisis", nama: "Analisis", ikon: "🧠", fn: vAnalisis },
-    { id: "dataset", nama: "Dataset", ikon: "🗂️", fn: vDataset },
-    { id: "laporan", nama: "Laporan", ikon: "📄", fn: vLaporan },
+    { id: "dasbor", nama: "Dasbor", ikon: "rumah", fn: vDasbor },
+    { id: "jurnal", nama: "Jurnal", ikon: "pena", fn: vJurnal },
+    { id: "analisis", nama: "Analisis", ikon: "chip", fn: vAnalisis },
+    { id: "dataset", nama: "Dataset", ikon: "arsip", fn: vDataset },
+    { id: "laporan", nama: "Laporan", ikon: "dokumen", fn: vLaporan },
   ];
 
   function render() {
@@ -788,7 +789,7 @@
     isi.classList.add("isi-masuk");
     document.getElementById("tabbar").innerHTML = TAB.map(
       (t) => '<button class="tab ' + (t.id === tab ? "aktif" : "") + '" data-act="tab" data-tab="' + t.id + '" aria-current="' + (t.id === tab) + '">' +
-        '<span class="tab-ikon">' + t.ikon + '</span><span class="tab-nama">' + t.nama + "</span></button>"
+        '<span class="tab-ikon">' + Ikon.svg(t.ikon) + '</span><span class="tab-nama">' + t.nama + "</span></button>"
     ).join("");
     document.getElementById("tanggal").textContent = tanggalPanjang();
     terapkanTema();
@@ -798,9 +799,9 @@
   function terapkanTema() {
     const gelap = S.pengaturan.tema === "gelap";
     document.documentElement.dataset.tema = gelap ? "gelap" : "terang";
-    document.getElementById("btnTema").textContent = gelap ? "☀️" : "🌙";
+    document.getElementById("btnTema").innerHTML = Ikon.svg(gelap ? "matahari" : "bulan");
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", gelap ? "#0f0d1c" : "#6d4aff");
+    if (meta) meta.setAttribute("content", gelap ? "#04060f" : "#e9edf5");
   }
 
   /* ---------------- Data contoh ---------------- */
@@ -833,7 +834,7 @@
     S.sesi = tambah.concat(S.sesi);
     simpan();
     if (!diam) {
-      Anim.toast("Contoh 14 hari ditambahkan", "mint", "📚");
+      Anim.toast("Contoh 14 hari ditambahkan", "mint", "buku");
       render();
     }
   }
@@ -883,7 +884,7 @@
     S.dataset = hasilImpor;
     versiData++;
     simpan();
-    Anim.toast(hasilImpor.length + " responden diimpor", "mint", "🗂️");
+    Anim.toast(hasilImpor.length + " responden diimpor", "mint", "arsip");
     render();
   }
 
@@ -924,7 +925,7 @@
       S.sesi = S.sesi.filter((s) => s.id !== el.dataset.id);
       simpan();
       render();
-      Anim.toast("Sesi dihapus", "merah", "🗑️");
+      Anim.toast("Sesi dihapus", "merah", "sampah");
     } else if (act === "edit-sesi") {
       editSesi = el.dataset.id;
       const s = S.sesi.find((x) => x.id === editSesi);
@@ -937,7 +938,7 @@
       S.sesi.unshift(Object.assign({}, s, { id: uid(), tanggal: iso(new Date()), dibuat: Date.now() }));
       simpan();
       render();
-      Anim.toast("Sesi diulang untuk hari ini", "mint", "📋");
+      Anim.toast("Sesi diulang untuk hari ini", "mint", "ulang");
     } else if (act === "batal-edit") {
       editSesi = null;
       render();
@@ -954,13 +955,13 @@
       window.print();
     } else if (act === "ekspor-csv-sesi") {
       unduh("sesi-belajar.csv", csvSesi(), "text/csv;charset=utf-8");
-      Anim.toast("CSV sesi diunduh", "mint", "⬇️");
+      Anim.toast("CSV sesi diunduh", "mint", "unduh");
     } else if (act === "ekspor-csv-dataset") {
       unduh("dataset-survei.csv", csvDataset(), "text/csv;charset=utf-8");
-      Anim.toast("CSV dataset diunduh", "mint", "⬇️");
+      Anim.toast("CSV dataset diunduh", "mint", "unduh");
     } else if (act === "ekspor-json") {
       unduh("studytrack-cadangan.json", JSON.stringify(S, null, 2), "application/json");
-      Anim.toast("Cadangan JSON diunduh", "mint", "💾");
+      Anim.toast("Cadangan JSON diunduh", "mint", "simpan");
     } else if (act === "hapus-data") {
       S.dataset = S.dataset.filter((b) => b.id !== el.dataset.id);
       versiData++;
@@ -972,14 +973,14 @@
       versiData++;
       simpan();
       render();
-      Anim.toast("Dataset dikembalikan ke data bawaan", "ungu", "↩️");
+      Anim.toast("Dataset dikembalikan ke data bawaan", "ungu", "balik");
     } else if (act === "hapus-sesi-semua") {
       if (!confirm("Hapus seluruh riwayat sesi? Tindakan ini tidak bisa dibatalkan.")) return;
       S.sesi = [];
       simpan();
       Anim.tutupLembar();
       render();
-      Anim.toast("Riwayat sesi dihapus", "merah", "🗑️");
+      Anim.toast("Riwayat sesi dihapus", "merah", "sampah");
     } else if (act === "kenal-lanjut") {
       if (langkahKenal < LANGKAH_KENAL.length - 1) {
         langkahKenal++;
@@ -1001,7 +1002,7 @@
         "Tidur ikut dihitung. Kurang tidur menurunkan skor kebiasaanmu.",
         "HP saat belajar dihitung sebagai fitur negatif.",
         "Data tersimpan di peramban ini, tanpa server.",
-        "Tekan ⚙️ untuk mengubah target harian dan namamu.",
+        "Tombol pengaturan di kanan atas mengubah target harian dan namamu.",
       ];
       Anim.nora(tips[Math.floor(Math.random() * tips.length)]);
     } else if (act === "urut") {
@@ -1046,7 +1047,7 @@
         try {
           imporCsv(String(baca.result));
         } catch (err) {
-          Anim.toast("Gagal impor: " + err.message, "merah", "⚠️");
+          Anim.toast("Gagal impor: " + err.message, "merah", "peringatan");
         }
       };
       baca.readAsText(berkas);
@@ -1065,7 +1066,7 @@
       simpan();
       Anim.tutupLembar();
       render();
-      Anim.toast("Pengaturan disimpan", "mint", "✅");
+      Anim.toast("Pengaturan disimpan", "mint", "cek");
       return;
     }
 
@@ -1092,10 +1093,10 @@
       const i = S.sesi.findIndex((s) => s.id === editSesi);
       if (i >= 0) S.sesi[i] = Object.assign({}, S.sesi[i], data);
       editSesi = null;
-      Anim.toast("Sesi diperbarui", "mint", "✅");
+      Anim.toast("Sesi diperbarui", "mint", "cek");
     } else {
       S.sesi.unshift(Object.assign({ id: uid(), dibuat: Date.now() }, data));
-      Anim.toast("Sesi tersimpan · " + jam(data.menit), "mint", "✅");
+      Anim.toast("Sesi tersimpan · " + jam(data.menit), "mint", "cek");
     }
     simpan();
     render();
@@ -1103,7 +1104,7 @@
     if (sebelum < target && sebelum + data.menit >= target) {
       const kotak = e.target.getBoundingClientRect();
       Anim.konfeti(kotak.left + kotak.width / 2, kotak.top + kotak.height / 2, 30);
-      setTimeout(() => Anim.toast("Target harian tercapai 🎉", "ungu", "🏆"), 320);
+      setTimeout(() => Anim.toast("Target harian tercapai", "ungu", "piala"), 320);
     }
   });
 
@@ -1127,6 +1128,7 @@
 
   Anim.siapkanMuat();
   Anim.pantauGulir();
+  if (window.Kota) window.Kota.pasang();
   render();
 
   if (!S.pengaturan.sudahKenal) {

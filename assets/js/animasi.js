@@ -14,8 +14,30 @@
   function siapkanMuat() {
     const el = document.getElementById("muat");
     if (!el) return;
+
+    /* baris log bergulir di layar muat */
+    const log = document.getElementById("muatLog");
+    const baris = [
+      "memuat dataset survei",
+      "menstandarkan enam fitur",
+      "menjalankan k-means++",
+      "menghitung silhouette",
+      "menyiapkan dasbor",
+    ];
+    let i = 0;
+    const tik = log
+      ? setInterval(() => {
+          if (i >= baris.length) {
+            clearInterval(tik);
+            return;
+          }
+          log.textContent = baris[i++];
+        }, 240)
+      : null;
+
     const lepas = () => {
       if (el.classList.contains("lepas")) return;
+      if (tik) clearInterval(tik);
       el.classList.add("lepas");
       setTimeout(() => el.remove(), 700);
     };
@@ -74,7 +96,7 @@
     if (kurangiGerak()) return;
     const wadah = document.getElementById("tumpah");
     if (!wadah) return;
-    const warna = ["#6d4aff", "#ff7ab8", "#22c39a", "#f5a524", "#4f8dfd", "#9a7bff"];
+    const warna = ["#22d3ee", "#ff2d95", "#2ee6a8", "#ffb020", "#8b5cf6", "#e6edff"];
     n = n || 26;
     for (let i = 0; i < n; i++) {
       const p = document.createElement("span");
@@ -105,7 +127,9 @@
     tirai.innerHTML =
       '<div class="lembar" role="dialog" aria-modal="true" aria-label="' + (opsi.judul || "Panel") + '">' +
       '<div class="lembar-kepala"><h3>' + (opsi.judul || "") + "</h3>" +
-      '<button class="tutup" data-lembar="tutup" aria-label="Tutup">✕</button></div>' +
+      '<button class="tutup" data-lembar="tutup" aria-label="Tutup">' +
+      (global.Ikon ? global.Ikon.svg("silang") : "✕") +
+      "</button></div>" +
       '<div class="lembar-isi">' + html + "</div>" +
       (opsi.kaki ? '<div class="lembar-kaki">' + opsi.kaki + "</div>" : "") +
       "</div>";
@@ -145,12 +169,19 @@
   }
 
   /* ---------- Toast ---------- */
+  /* `ikon` boleh berupa nama ikon ("cek") atau potongan HTML/SVG langsung. */
   function toast(teks, warna, ikon) {
     const wadah = document.getElementById("toastWadah");
     if (!wadah) return;
+    let tanda = "";
+    if (ikon) {
+      if (ikon.indexOf("<") === 0) tanda = '<span class="ikon">' + ikon + "</span>";
+      else if (global.Ikon) tanda = global.Ikon.bungkus(ikon);
+      else tanda = "<span>" + ikon + "</span>";
+    }
     const el = document.createElement("div");
     el.className = "toast " + (warna || "ungu");
-    el.innerHTML = (ikon ? "<span>" + ikon + "</span>" : "") + "<span>" + teks + "</span>";
+    el.innerHTML = tanda + "<span>" + teks + "</span>";
     wadah.appendChild(el);
     setTimeout(() => {
       el.classList.add("keluar");

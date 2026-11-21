@@ -1,33 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Ikon StudyTrack">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#9a7bff"/>
-      <stop offset=".55" stop-color="#6d4aff"/>
-      <stop offset="1" stop-color="#ff7ab8"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1226"/>
+      <stop offset=".55" stop-color="#05080f"/>
+      <stop offset="1" stop-color="#150a22"/>
     </linearGradient>
-    <linearGradient id="p" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#ffeaf5"/>
+    <linearGradient id="neon" gradientUnits="userSpaceOnUse" x1="114" y1="418" x2="398" y2="78">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset=".58" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#ff2d95"/>
     </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".34" r=".6">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect width="512" height="512" rx="118" fill="url(#g)"/>
-  <ellipse cx="256" cy="404" rx="132" ry="18" fill="#3d1f8f" opacity=".16"/>
 
-  <!-- halaman kiri -->
-  <path d="M112 148h108a16 16 0 0 1 16 16v214c0 8-6 13-14 12-40-4-76 2-100 10-8 3-16-2-16-10V154a6 6 0 0 1 6-6z" fill="url(#p)"/>
-  <!-- halaman kanan -->
-  <path d="M400 148H292a16 16 0 0 0-16 16v214c0 8 6 13 14 12 40-4 76 2 100 10 8 3 16-2 16-10V154a6 6 0 0 0-6-6z" fill="#ffd9ec"/>
-  <!-- punggung buku -->
-  <rect x="248" y="146" width="16" height="248" rx="8" fill="#ffffff" opacity=".92"/>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#glow)"/>
 
-  <!-- garis teks -->
-  <g stroke="#c9bcff" stroke-width="9" stroke-linecap="round" opacity=".9">
-    <path d="M146 214h76M146 248h60M146 282h72M146 316h48"/>
-  </g>
-  <g stroke="#ffb3d6" stroke-width="9" stroke-linecap="round" opacity=".95">
-    <path d="M290 214h76M290 248h60M290 282h72M290 316h48"/>
+  <!-- kisi HUD -->
+  <g stroke="#22d3ee" stroke-width="1.4" opacity=".12">
+    <path d="M0 128h512M0 256h512M0 384h512M128 0v512M256 0v512M384 0v512"/>
   </g>
 
-  <!-- penanda buku -->
-  <path d="M330 148h34v58l-17-14-17 14z" fill="#f5a524"/>
+  <!-- segi enam -->
+  <path d="M256 78 398 160v176L256 418 114 336V160z" fill="none" stroke="url(#neon)" stroke-width="11" stroke-linejoin="round" opacity=".9"/>
+
+  <!-- batang naik -->
+  <g stroke="url(#neon)" stroke-width="27" stroke-linecap="round">
+    <path d="M180 346v-46"/>
+    <path d="M256 346V240"/>
+    <path d="M332 346V176"/>
+  </g>
+
+  <!-- garis dasar -->
+  <path d="M150 358h212" stroke="#22d3ee" stroke-width="5" stroke-linecap="round" opacity=".4"/>
+
+  <!-- bintang -->
+  <g fill="#e6f9ff">
+    <circle cx="176" cy="132" r="4" opacity=".8"/>
+    <circle cx="352" cy="212" r="3" opacity=".55"/>
+    <circle cx="330" cy="118" r="5" fill="#ff2d95" opacity=".9"/>
+  </g>
 </svg>

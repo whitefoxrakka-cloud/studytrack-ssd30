@@ -42,10 +42,10 @@ melihat gambaran kebiasaan belajar sekelompok mahasiswa.
 | FR-05 | Posisi pengguna | Vektor fitur pengguna ditempatkan ke centroid terdekat, dibandingkan dengan rata-rata kelompoknya |
 | FR-06 | Kelola dataset | Tabel 90 responden, pencarian, filter prodi, hapus baris, impor CSV, ekspor CSV, reset |
 | FR-07 | Laporan | Rekap pekan, proyeksi regresi linear, ringkasan cluster, cetak/PDF, ekspor CSV/JSON |
-| FR-08 | Tema & PWA | Mode terang/gelap, dapat dipasang sebagai aplikasi (service worker) |
+| FR-08 | Tema & PWA | Dua tema: **malam neon** (bawaan) dan **siang**; dapat dipasang sebagai aplikasi (service worker) |
 | FR-09 | Onboarding & pengaturan | Tur 3 langkah saat pertama dibuka; atur nama, target harian, k bawaan, tema, hapus data |
 | FR-10 | Catatan Nora | Saran kontekstual: runtutan hari, tidur kurang, HP berlebih, atau posisi cluster |
-| FR-11 | Animasi & aksesibilitas | Angka berjalan, grafik tumbuh, transisi tab, konfeti target; otomatis tenang bila *prefers-reduced-motion* |
+| FR-11 | Animasi & aksesibilitas | Angka berjalan, grafik tumbuh, transisi tab, konfeti target, latar kota beranimasi; otomatis tenang bila *prefers-reduced-motion* |
 
 **Non-fungsional utama:** antarmuka mobile-first (≤390 px tetap rapi), tanpa dependensi pihak ketiga,
 hasil clustering deterministik (bibit tetap), waktu analisis < 100 ms untuk 90 data, data pengguna
@@ -110,7 +110,7 @@ Mengganti dengan data survei asli:
 
 ```
 studytrack-ssd30/
-├─ index.html                  kerangka halaman (topbar, main, tabbar, maskot)
+├─ index.html                  kerangka halaman (topbar, main, tabbar, maskot, wadah kota)
 ├─ manifest.webmanifest        metadata PWA
 ├─ sw.js                       service worker (cache luring)
 ├─ assets/
@@ -120,19 +120,46 @@ studytrack-ssd30/
 │  └─ js/
 │     ├─ dataset.js            data survei (dibangkitkan)
 │     ├─ kmeans.js             mesin Data Sains (murni, bisa diuji Node)
+│     ├─ ikon.js               set ikon garis 24×24 (tanpa berkas gambar)
 │     ├─ grafik.js             pembuat grafik SVG + kelas animasinya
 │     ├─ animasi.js            layar muat, angka berjalan, riak, konfeti, lembar, toast
+│     ├─ kota.js               latar kota futuristik beranimasi (SVG berlapis)
 │     └─ app.js                state, tampilan, dan interaksi
 ├─ data/survei.csv             dataset dalam bentuk CSV
 ├─ tools/buat-dataset.mjs      pembangkit dataset (deterministik)
-├─ tools/buat-gambar.py        pembangkit gambar OG (Pillow)
+├─ tools/og.html               sumber gambar OG (dirender jadi assets/img/og.png)
+├─ tools/buat-gambar.py        pembangkit gambar lama (Pillow) — masih tersimpan sebagai arsip
 ├─ tests/kmeans.test.mjs       uji unit mesin Data Sains
 └─ docs/METODE.md              penjelasan metode & rumus
 ```
 
 ---
 
-## 6. Aset gambar
+## 6. Rupa dan animasi
+
+Arah rupa: **cyberpunk / hologram** — rujukan *Cyberpunk 2077*, *Detroit: Become Human*, *Portal 2*,
+*Cloudpunk*, dan panorama kota malam yang terus bergerak.
+
+- **Dua tema.** `data-tema="gelap"` (bawaan) memakai panel gelap tembus pandang, aksen neon
+  `#22d3ee` / `#ff2d95` / `#8b5cf6`, garis tipis, dan label huruf mono berspasi lebar seperti HUD.
+  `data-tema="terang"` memakai palet bersih ala Detroit siang hari (aksen `#0e7490`).
+- **Latar kota beranimasi** (`assets/js/kota.js`). Tiga lapis siluet gedung digambar sebagai SVG lalu
+  digeser tanpa putus (220 s / 130 s / 78 s per lapis) sehingga terbentuk parallax. Di atasnya:
+  96 bintang berkedip, bulan bercahaya dengan cincin putar, jendela gedung yang menyala-mati,
+  papan reklame neon, antena, kendaraan terbang, hujan tipis, dan kabut bawah. Semuanya dibangkitkan
+  dengan bibit tetap agar bentuknya sama setiap muat, dan disembunyikan pada `prefers-reduced-motion`
+  maupun saat mencetak.
+- **Lapisan suasana.** Overlay scanline halus di seluruh layar, panel dengan sudut terpotong dan garis
+  aksen neon, cincin progres dengan *drop-shadow*, maskot Nora berupa hologram yang berkedip.
+- **Gerak.** Angka berjalan (count-up), grafik tumbuh berurutan, transisi antar tab, riak pada tombol,
+  konfeti saat target harian tercapai, lembar bawah (bottom sheet), toast, dan layar muat bergaya
+  terminal dengan log bergulir.
+- **Ikon.** Seluruh ikon adalah SVG garis 24×24 di `assets/js/ikon.js` — tidak ada emoji dan tidak ada
+  berkas gambar, sehingga warnanya otomatis mengikuti tema.
+
+---
+
+## 7. Aset gambar
 
 Semua gambar berada di `assets/img/` dan **sudah terisi** (dibuat sendiri, bukan stok). Ganti berkasnya
 dengan ilustrasi pesanan tanpa mengubah kode — selama nama dan rasio tetap.
@@ -145,12 +172,21 @@ dengan ilustrasi pesanan tanpa mengubah kode — selama nama dan rasio tetap.
 | `og.png` | 1200×630 | Pratinjau tautan (WhatsApp, X, dll.) | jangan beri teks di tepi 60 px |
 | `ikon-192.png`, `ikon-512.png` | persegi | Ikon PWA / homescreen | sisakan margin aman 12% (maskable) |
 
-Palet yang dipakai aplikasi: `#6d4aff` (ungu), `#ff7ab8` (pink), `#4f8dfd` (biru), `#22c39a` (mint),
-`#f5a524` (kuning), `#ef5b7d` (merah). Ilustrasi sebaiknya memakai 2–3 warna dari daftar ini agar menyatu.
+Palet neon yang dipakai aplikasi: `#22d3ee` (sian), `#ff2d95` (magenta), `#8b5cf6` (violet),
+`#2ee6a8` (mint), `#ffb020` (amber), `#ff4d6d` (merah). Latar `#04060f` → `#0a1020`.
+Ilustrasi sebaiknya memakai 2–3 warna dari daftar ini di atas latar transparan agar menyatu.
+
+**Mengganti gambar:** cukup timpa berkasnya (nama dan rasio tetap). `og.png` dan ikon PNG bisa
+dirender ulang dari `tools/og.html` dan `assets/ikon.svg`:
+
+```bash
+chrome --headless --window-size=1200,630 --screenshot=assets/img/og.png \
+       --virtual-time-budget=2500 "file:///.../tools/og.html"
+```
 
 ---
 
-## 7. Menjalankan
+## 8. Menjalankan
 
 **Cara cepat:** buka `index.html` langsung di peramban (semua fitur jalan dari `file://`).
 
@@ -166,12 +202,13 @@ python -m http.server 8000
 ```
 http://localhost:8000/?demo=1
 http://localhost:8000/?demo=1#analisis     # langsung ke tab analisis
-http://localhost:8000/?tema=gelap          # tema gelap
+http://localhost:8000/?tema=terang         # tema siang (bawaan: malam neon)
+http://localhost:8000/?kenal=0             # lewati tur perkenalan
 ```
 
 ---
 
-## 8. Pengujian
+## 9. Pengujian
 
 ```bash
 node --test tests/kmeans.test.mjs
@@ -202,7 +239,7 @@ silhouette 0,355 · SSE 162 · iterasi 5 · k=3
 
 ---
 
-## 9. Peta jalan menuju versi final
+## 10. Peta jalan menuju versi final
 
 Versi web ini sudah memuat seluruh alur bisnis dan komponen Data Sains. Untuk memenuhi ketentuan
 "basis data terhubung" pada tugas besar, langkah berikutnya:
@@ -221,7 +258,7 @@ langsung dibandingkan dengan hasil scikit-learn sebagai uji silang.
 
 ---
 
-## 10. Pembagian tugas (contoh, 4 anggota)
+## 11. Pembagian tugas (contoh, 4 anggota)
 
 | Anggota | Tanggung jawab | Diagram |
 |---------|----------------|---------|
@@ -235,7 +272,7 @@ Kontribusi ditelusuri lewat riwayat commit; setiap anggota memegang minimal satu
 
 ---
 
-## 11. Catatan
+## 12. Catatan
 
 - Aplikasi ini diturunkan dari **Target Ashira** (pelacak target pribadi) — struktur tab, sistem
   penyimpanan, dan gaya visualnya dipakai ulang, lalu diarahkan ke domain akademik dan dilengkapi

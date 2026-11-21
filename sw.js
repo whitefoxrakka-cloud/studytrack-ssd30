@@ -1,13 +1,15 @@
 /* Service worker StudyTrack — cache sederhana, versi dinaikkan tiap rilis. */
-const VERSI = "st-v2";
+const VERSI = "st-v3";
 const ASET = [
   "./",
   "index.html",
   "assets/css/app.css",
   "assets/js/dataset.js",
   "assets/js/kmeans.js",
+  "assets/js/ikon.js",
   "assets/js/grafik.js",
   "assets/js/animasi.js",
+  "assets/js/kota.js",
   "assets/js/app.js",
   "manifest.webmanifest",
   "assets/ikon.svg",
