@@ -8,7 +8,6 @@
   "use strict";
 
   const KEY = "studytrack_v1";
-  const APP = { nama: "StudyTrack", sub: "Analisis Kebiasaan Belajar" };
   const TARGET_HARIAN_BAWAAN = 120; // menit
 
   /* ---------------- State ---------------- */
