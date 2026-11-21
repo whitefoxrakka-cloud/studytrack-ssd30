@@ -12,6 +12,9 @@ UIN K.H. Abdurrahman Wahid Pekalongan.
 **Demo langsung:** <https://whitefoxrakka-cloud.github.io/studytrack-ssd30/?demo=1>
 (tautan `?demo=1` otomatis mengisi 14 hari data contoh).
 
+**Dokumen progres & laporan tahapan:** <https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress>
+— berisi Laporan Tahap 1 (identifikasi masalah) dan Tahap 2 (analisis kebutuhan sistem).
+
 ---
 
 ## 1. Masalah dan solusi
