@@ -9,6 +9,9 @@ UIN K.H. Abdurrahman Wahid Pekalongan.
 > `localStorage`, dan mesin K-Means ditulis sendiri dalam JavaScript sehingga dapat didemokan tanpa
 > server. Rencana versi final (Flask + SQLite + scikit-learn) ada di bagian [Peta jalan](#peta-jalan).
 
+**Demo langsung:** <https://whitefoxrakka-cloud.github.io/studytrack-ssd30/?demo=1>
+(tautan `?demo=1` otomatis mengisi 14 hari data contoh).
+
 ---
 
 ## 1. Masalah dan solusi
