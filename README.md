@@ -13,7 +13,13 @@ UIN K.H. Abdurrahman Wahid Pekalongan.
 (tautan `?demo=1` otomatis mengisi 14 hari data contoh).
 
 **Dokumen progres & laporan tahapan:** <https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress>
-— berisi Laporan Tahap 1 (identifikasi masalah) dan Tahap 2 (analisis kebutuhan sistem).
+
+| Dokumen | Berkas |
+|---------|--------|
+| Laporan Bab I–IV (Word / PDF, 70 halaman) | [`study-track-bab-1-4.docx`](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/study-track-bab-1-4.docx) · [`pdf`](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/study-track-bab-1-4.pdf) |
+| Laporan Tahap 1–4 | [tahap 1](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/tahap-1-identifikasi-masalah.md) · [2](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/tahap-2-analisis-kebutuhan.md) · [3](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/tahap-3-perancangan-uml.md) · [4](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/laporan/tahap-4-arsitektur-basis-data.md) |
+| Presentasi Tahap 1–4 (22 slide) | [`study-track-tahap-1-4.pptx`](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/blob/main/presentasi/study-track-tahap-1-4.pptx) |
+| Logbook mingguan per anggota | [logbook](https://github.com/whitefoxrakka-cloud/studytrack-ssd30-progress/tree/main/logbook) |
 
 ---
 
